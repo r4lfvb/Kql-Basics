@@ -1,0 +1,44 @@
+// ------------------------------------------------------------------------------------------
+// WHERE
+// ------------------------------------------------------------------------------------------
+// Demo data here: https://ms.portal.azure.com/#blade/Microsoft_Azure_Monitoring_Logs/DemoLogsBlade
+
+// Limit results to rows captured in the last hour
+// ago syntax: d = days / h = hours / m = minutes / s = seconds / ms = milliseconds
+Perf
+| where TimeGenerated >= ago(1h)
+
+
+// Limit results to rows captured in the last hour
+// AND counter name is "Bytes Received/sec"
+// AND counter value is greater than 0
+Perf
+| where TimeGenerated >= ago(1h)
+    and CounterName == "Bytes Received/sec"
+    and CounterValue  > 0
+
+// Limit results to rows captured in the last hour
+// AND counter name is "Bytes Received/sec" OR counter name is "% Processor Time
+// AND counter value is greater than 0
+Perf
+| where TimeGenerated >= ago(1h)
+    and (CounterName == "Bytes Received/sec"
+        or
+        CounterName  == "% Processor Time")
+    and CounterValue  > 0
+
+// Where operators are stackable
+Perf
+| where TimeGenerated >= ago(1h)
+| where (CounterName == "Bytes Received/sec"
+        or
+        CounterName  == "% Processor Time")
+| where CounterValue  > 0
+
+// Where operators can simulate search
+Perf
+| where * has "Bytes"
+
+// It can do contains, beginswith, endswith, hasprefix, hassuffix, wildcards and regex
+Perf
+| where * hasprefix "Bytes" or * hassuffix "Bytes"

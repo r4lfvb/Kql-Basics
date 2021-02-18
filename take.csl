@@ -1,0 +1,16 @@
+// ------------------------------------------------------------------------------------------
+// TAKE / LIMIT
+// ------------------------------------------------------------------------------------------
+// Demo data here: https://ms.portal.azure.com/#blade/Microsoft_Azure_Monitoring_Logs/DemoLogsBlade
+
+// Take a number of random rows from the table
+Perf
+| take 10
+
+// Take can be combined with other operators
+Perf
+| take 10
+| where TimeGenerated >= ago(1h)
+| where * has "Bytes"
+
+// Take has a synonymn "Limit"

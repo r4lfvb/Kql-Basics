@@ -1,0 +1,41 @@
+// ------------------------------------------------------------------------------------------
+// SUMMARIZE
+// ------------------------------------------------------------------------------------------
+// Demo data here: https://ms.portal.azure.com/#blade/Microsoft_Azure_Monitoring_Logs/DemoLogsBlade
+
+// Group the number of rows for each CounterName column value in the Perf table
+// This uses the count() function
+Perf
+| summarize count() by CounterName
+
+// Can group by multiple columns
+Perf
+| summarize count() by ObjectName, CounterName
+
+// Rename output columns
+Perf
+| summarize PerfCount=count() by ObjectName, CounterName
+
+// Group using both count() and avg() functions
+Perf
+| where CounterName == "% Free Space"
+| summarize NumberOfEntries=count(),
+    AverageFreeSpace=avg(CounterValue)
+    by CounterName
+
+// Group into logical buckets (bin function) like days
+Perf
+| summarize NumberOfEntries=count()
+    by bin(TimeGenerated, 1d)
+
+// Bin by multiple columns
+Perf
+| summarize NumberOfEntries=count()
+    by CounterName,
+    bin(TimeGenerated, 1d)
+
+// Bin by values other than dates
+Perf
+| where CounterName == "% Free Space"
+| summarize NumberOfEntries = count()
+    by bin(CounterValue,10)

@@ -1,0 +1,48 @@
+// ------------------------------------------------------------------------------------------
+// SEARCHING
+// ------------------------------------------------------------------------------------------
+// Demo data here: https://ms.portal.azure.com/#blade/Microsoft_Azure_Monitoring_Logs/DemoLogsBlade
+
+// Look for the "Memory" keyword in the perf table
+Perf
+| search "Memory"
+
+// Look for the "Memory" keyword in the perf table
+// this time case sensitive
+Perf
+| search kind=case_sensitive "Memory"
+
+// Look for the "Contoso" keyword in the Perf, Event and Alert tables
+search in (Perf, Event, Alert) "Contoso"
+
+// Look for the exact phrase "Available MBytes" in the CounterName column of the Perf table
+Perf
+| search CounterName=="Available MBytes"
+
+// Look for any rows that contain the phrase "MBytes" in the CounterName column of the Perf table
+Perf
+| search CounterName:"MBytes"
+
+// Look for any rows in the Perf table using wildcards
+// ---------------------------------------------------
+
+Perf
+| search "*Bytes*" // anywhere in the value
+
+Perf
+| search * startswith "Bytes" // begins with
+
+Perf
+| search * endswith "Bytes" // ends with
+
+Perf
+| search "Free*Bytes" // begins with "Free" ends with "Bytes"
+
+// Look for rows that begin with "Free" ends with "Bytes" AND contain "C:" or "D:" in the Perf table
+Perf
+| search "Free*Bytes" and ("C:" or "D:")
+
+// Look for rows using Regex
+// Look for rows in the Perf table where column InstanceName matches a root drive
+Perf
+| search InstanceName matches regex "[A-Z]:"
